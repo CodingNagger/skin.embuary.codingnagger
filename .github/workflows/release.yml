@@ -27,7 +27,7 @@ jobs:
         id: version
         uses: codacy/git-version@2.8.0
         with:
-          tag-prefix: "v"  # Optional: customize if you have a different tag pattern
+          version-prefix: "v"
 
       # Prepare the add-on directory structure
       - name: Prepare Add-on Directory
