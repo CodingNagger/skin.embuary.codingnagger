@@ -1,6 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: embuary
-# Addon id: skin.embuary
+# Addon id: skin.embuary.codingnagger
 # Addon Provider: sualfred
 # Translators:
 # Filip Hofwing <filip@hofwing.se>, 2018
