@@ -33,7 +33,7 @@ jobs:
       - name: Prepare Add-on Directory
         run: |
             mkdir -p ${ADDON_NAME}
-            cp -r * ${ADDON_NAME}/
+            ls | grep -v "${ADDON_NAME}" | xargs -I {} cp -r {} ${ADDON_NAME}/
             cd ${ADDON_NAME}
             rm -rf .git .github *.psd  # Exclude unnecessary files
 
