@@ -34,20 +34,6 @@ jobs:
       - name: Prepare Add-on Directory
         run: |
             mkdir -p ${ADDON_NAME}
-            cp -r * ${ADDON_NAME}/
-            cd ${ADDON_NAME}
-            rm -rf .git .github *.psd  # Exclude unnecessary files
-
-      # Create ZIP file for the Kodi add-on
-      - name: Create ZIP package
-        run: |
-          cd ..
-          zip -r ${{ env.ADDON_NAME }}.zip ${ADDON_NAME}
-
-      # Prepare the add-on directory structure
-      - name: Prepare Add-on Directory
-        run: |
-            mkdir -p ${ADDON_NAME}
             ls | grep -v "${ADDON_NAME}" | xargs -I {} cp -r {} ${ADDON_NAME}/
             cd ${ADDON_NAME}
             rm -rf .git .github *.psd  # Exclude unnecessary files
