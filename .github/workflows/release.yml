@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-  
 
 env:
   ADDON_NAME: skin.embuary.codingnagger
