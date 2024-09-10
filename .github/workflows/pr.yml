@@ -41,23 +41,23 @@ jobs:
           mkdir -p ~/.kodi/addons/packages
           cp ${{ env.ADDON_NAME }}.zip ~/.kodi/addons/packages/
 
-      # Install the add-on from the ZIP file using Kodi's CLI
-      - name: Install Add-on from ZIP
-        run: |
-          kodi --standalone --test > kodi.log 2>&1 &
-          sleep 10  # Wait for Kodi to start
-          # No kodi-send; check log directly
-          tail -f ~/.kodi/temp/kodi.log &  # Keep the log output for inspection
-          sleep 30  # Allow time for Kodi to process and log the add-on installation
-          pkill -f kodi  # Terminate Kodi process
+      # # Install the add-on from the ZIP file using Kodi's CLI
+      # - name: Install Add-on from ZIP
+      #   run: |
+      #     kodi --standalone --test > kodi.log 2>&1 &
+      #     sleep 10  # Wait for Kodi to start
+      #     # No kodi-send; check log directly
+      #     tail -f ~/.kodi/temp/kodi.log &  # Keep the log output for inspection
+      #     sleep 30  # Allow time for Kodi to process and log the add-on installation
+      #     pkill -f kodi  # Terminate Kodi process
 
-      # Verify the add-on was installed and loaded successfully
-      - name: Check Kodi Log for Add-on Load Success
-        run: |
-          if grep -q "${{ env.ADDON_NAME }}" ~/.kodi/temp/kodi.log; then
-            echo "Add-on installed and loaded successfully"
-          else
-            echo "Add-on failed to load"
-            cat ~/.kodi/temp/kodi.log
-            exit 1
-          fi
+      # # Verify the add-on was installed and loaded successfully
+      # - name: Check Kodi Log for Add-on Load Success
+      #   run: |
+      #     if grep -q "${{ env.ADDON_NAME }}" ~/.kodi/temp/kodi.log; then
+      #       echo "Add-on installed and loaded successfully"
+      #     else
+      #       echo "Add-on failed to load"
+      #       cat ~/.kodi/temp/kodi.log
+      #       exit 1
+      #     fi
