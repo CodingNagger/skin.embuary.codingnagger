@@ -1,0 +1,61 @@
+name: Test Kodi Add-on
+
+on:
+  pull_request:
+    branches:
+      - master
+
+env:
+  ADDON_NAME: skin.embuary.codingnagger
+
+jobs:
+  kodi-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Install Kodi and dependencies
+      - name: Install Kodi and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y kodi xvfb x11-utils zip
+
+      # Set up Xvfb for headless testing
+      - name: Start Xvfb
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+          export DISPLAY=:99
+          sleep 3
+
+      # Package the add-on into a ZIP file
+      - name: Package Add-on
+        run: |
+          zip -r ${{ env.ADDON_NAME }}.zip * -x .git .github
+
+      # Create Kodi's user data directory and copy the ZIP file there
+      - name: Copy ZIP file to Kodi's addons directory
+        run: |
+          mkdir -p ~/.kodi/addons/packages
+          cp ${{ env.ADDON_NAME }}.zip ~/.kodi/addons/packages/
+
+      # Install the add-on from the ZIP file using Kodi's CLI
+      - name: Install Add-on from ZIP
+        run: |
+          kodi --standalone --test > kodi.log 2>&1 &
+          sleep 10  # Wait for Kodi to start
+          kodi-send --action="InstallAddonFromZip($HOME/.kodi/addons/packages/${{ env.ADDON_NAME }}.zip)"
+          sleep 5  # Wait for installation to complete
+
+      # Verify the add-on was installed and loaded successfully
+      - name: Check Kodi Log for Add-on Load Success
+        run: |
+          if grep -q "${{ env.ADDON_NAME }}" ~/.kodi/temp/kodi.log; then
+            echo "Add-on installed and loaded successfully"
+          else
+            echo "Add-on failed to load"
+            cat ~/.kodi/temp/kodi.log
+            exit 1
+          fi
