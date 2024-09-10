@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  
 
 env:
   ADDON_NAME: skin.embuary.codingnagger
@@ -16,11 +17,11 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.7
 
       # Set up Python (Kodi add-ons use Python)
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.2.0
         with:
           python-version: '3.x'
 
@@ -31,7 +32,7 @@ jobs:
       # Generate the version using Codacy git-version
       - name: Generate version
         id: version
-        uses: codacy/git-version@v3
+        uses: codacy/git-version@v2.8.0
         with:
           tag-prefix: "v"  # Optional: customize if you have a different tag pattern
 
@@ -42,7 +43,7 @@ jobs:
 
       # Upload the generated ZIP file as an artifact
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.4.0
         with:
           name: addon-zip
           path: ${{ env.ADDON_NAME }}-${{ steps.version.outputs.version }}.zip
@@ -55,18 +56,18 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.7
 
       # Download the ZIP artifact from the build job
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.8
         with:
           name: addon-zip
           path: .
 
       # Create a GitHub release using the generated version
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.0.8
         with:
           tag_name: ${{ steps.version.outputs.version }}   # Use the version from codacy/git-version
           name: "Release ${{ steps.version.outputs.version }}"
