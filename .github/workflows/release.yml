@@ -29,10 +29,19 @@ jobs:
         with:
           tag-prefix: "v"  # Optional: customize if you have a different tag pattern
 
+       # Prepare the add-on directory structure
+      - name: Prepare Add-on Directory
+        run: |
+            mkdir -p ${ADDON_NAME}
+            cp -r * ${ADDON_NAME}/
+            cd ${ADDON_NAME}
+            rm -rf .git .github *.psd  # Exclude unnecessary files
+
       # Create ZIP file for the Kodi add-on
       - name: Create ZIP package
         run: |
-          zip -r ${{ env.ADDON_NAME }}-${{ steps.version.outputs.version }}.zip * -x .git .github
+          cd ..
+          zip -r ${{ env.ADDON_NAME }}-${{ github.run_number }}.zip ${ADDON_NAME}
 
       # Upload the generated ZIP file as an artifact
       - name: Upload artifact
