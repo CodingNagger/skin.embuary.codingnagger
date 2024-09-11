@@ -8,7 +8,5 @@ mkdir -p $package_name
 # Copy files into directory
 ls | grep -v "$package_name" | grep -v ".git" | xargs -I {} cp -r {} $package_name/
 
-cd $package_name
-
 # Exclude unnecessary files
-find . -type f \( -iname "*.psd" -o -iname "*.md" \) -exec rm -f {} \;
+find $package_name -type f \( -iname "*.psd" -o -iname "*.md" \) -exec rm -f {} \;
