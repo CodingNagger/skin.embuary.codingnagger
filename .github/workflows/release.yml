@@ -22,31 +22,29 @@ jobs:
       - name: Install zip
         run: sudo apt-get install zip
 
-      # Generate the version using Codacy git-version
       - name: Generate version
         id: version
         uses: codacy/git-version@2.8.0
 
-      # Prepare the add-on directory structure
-      - name: Prepare Add-on Directory
-        run: |
-            mkdir -p ${ADDON_NAME}
-            ls | grep -v "${ADDON_NAME}" | xargs -I {} cp -r {} ${ADDON_NAME}/
-            cd ${ADDON_NAME}
-            rm -rf .git .github *.psd  # Exclude unnecessary files
+      - name: Package add-on
+        id: package
+        uses: ./.github/actions/create-kodi-package
+        with:
+          name: ${{ env.ADDON_NAME }}
+          version:  ${{ steps.version.outputs.version }}
 
-      # Create ZIP file for the Kodi add-on
-      - name: Create ZIP package
+      # Create Kodi's user data directory and copy the ZIP file there
+      - name: Copy ZIP file to Kodi's addons directory
         run: |
-          cd ..
-          zip -r ${{ env.ADDON_NAME }}-${{ github.run_number }}.zip ${ADDON_NAME}
+          mkdir -p ~/.kodi/addons/packages
+          cp ${{ steps.package.outputs.package-name }} ~/.kodi/addons/packages/
 
       # Upload the generated ZIP file as an artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: addon-zip
-          path: ${{ env.ADDON_NAME }}-${{ steps.version.outputs.version }}.zip
+          path: ${{ steps.package.outputs.package-name }}
 
       # Create a Git tag
       - name: Create Tag
