@@ -1,0 +1,37 @@
+name: Package Kodi Add-On
+description: Packages Kodi Add-On
+inputs:
+  name:
+    description: Root directory
+    required: true
+  version:
+    description: Version used to generate the package
+    required: true
+
+outputs:
+  package-name:
+    description: Generated package name
+    value: ${{ steps.generate-package-name.outputs.package-name }}
+runs:
+  using: "composite"
+  steps:
+    - name: Generate package name
+      id: generate-package-name
+      shell: bash
+      run: echo "package-name=${{ inputs.name }}-${{ inputs.version }}.zip" >> $GITHUB_OUTPUT
+
+    - name: Prepare Add-on Directory
+      shell: bash
+      run: |
+        bash ${{ env.GITHUB_ACTION_PATH }}/prepare-directory.sh ${{ inputs.name }}
+
+    - name: Create ZIP package
+      shell: bash
+      run: |
+        zip -r ${{ steps.generate-package-name.outputs.package-name }} ${{ inputs.name }}
+
+    - name: Test ZIP package exists
+      shell: bash
+      run : |
+        stat ${{ steps.generate-package-name.outputs.package-name }} || exit 1
+

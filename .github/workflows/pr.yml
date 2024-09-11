@@ -41,9 +41,7 @@ jobs:
       # Create ZIP file for the Kodi add-on
       - name: Create ZIP package
         run: |
-          cd ..
-          zip -r ${{ env.ADDON_NAME }}.zip ${ADDON_NAME}
-
+          zip -r ${{ env.ADDON_NAME }}.zip .
       # Create Kodi's user data directory and copy the ZIP file there
       - name: Copy ZIP file to Kodi's addons directory
         run: |
