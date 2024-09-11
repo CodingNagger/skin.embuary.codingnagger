@@ -13,20 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      # - name: Checkout repository
+      #   uses: actions/checkout@v3
 
-      - name: Install Kodi and Xvfb
-        run: |
-          sudo add-apt-repository -y ppa:team-xbmc/ppa
-          sudo apt-get update
-          sudo apt-get install -y kodi xvfb kodi-eventclients-kodi-send
+      # - name: Install Kodi and Xvfb
+      #   run: |
+      #     sudo add-apt-repository -y ppa:team-xbmc/ppa
+      #     sudo apt-get update
+      #     sudo apt-get install -y kodi xvfb kodi-eventclients-kodi-send
 
-      - name: Start Xvfb (virtual framebuffer)
-        run: |
-          Xvfb :99 -screen 0 1920x1080x24 &
-          export DISPLAY=:99
+      # - name: Start Xvfb (virtual framebuffer)
+      #   run: |
+      #     Xvfb :99 -screen 0 1920x1080x24 &
+      #     export DISPLAY=:99
 
       - name: Generate version
         id: version
@@ -40,39 +39,43 @@ jobs:
           name: ${{ env.ADDON_NAME }}
           version:  ${{ steps.version.outputs.version }}
 
-      # Create Kodi's user data directory and copy the ZIP file there
-      - name: Copy ZIP file to Kodi's addons directory
-        run: |
-          KODI_ADDON_ZIP_PATH="$HOME/.kodi/addons/packages"
-          mkdir -p ~/.kodi/addons/packages
-          cp ${{ steps.package.outputs.package-name }} $KODI_ADDON_ZIP_PATH
-          echo "$KODI_ADDON_ZIP_PATH/${{ steps.package.outputs.package-name }}"
-          stat "$KODI_ADDON_ZIP_PATH"
-          ls "$KODI_ADDON_ZIP_PATH"
-          stat "$KODI_ADDON_ZIP_PATH/${{ steps.package.outputs.package-name }}"
+      # # Create Kodi's user data directory and copy the ZIP file there
+      # - name: Copy ZIP file to Kodi's addons directory
+      #   run: |
+      #     KODI_ADDON_ZIP_PATH="$HOME/.kodi/addons/packages"
+      #     mkdir -p ~/.kodi/addons/packages
+      #     cp ${{ steps.package.outputs.package-name }} $KODI_ADDON_ZIP_PATH
+      #     echo "$KODI_ADDON_ZIP_PATH/${{ steps.package.outputs.package-name }}"
+      #     stat "$KODI_ADDON_ZIP_PATH"
+      #     ls "$KODI_ADDON_ZIP_PATH"
+      #     stat "$KODI_ADDON_ZIP_PATH/${{ steps.package.outputs.package-name }}"
 
-      - name: Start Kodi
-        run: |
-          kodi --standalone --headless > kodi.log 2>&1 &
-          sleep 1  # Wait for Kodi to start
+      # - name: Enable debug logging
+      #   run: |
+      #     mkdir -p ~/.kodi/userdata
+      #     echo '<advancedsettings><loglevel>1</loglevel></advancedsettings>' > ~/.kodi/userdata/advancedsettings.xml
 
-      - name: Install Add-on from ZIP
-        run: |
-          # No kodi-send; check log directly
-          kodi-send --action="InstallAddonFromZip($HOME/.kodi/addons/packages/${{ steps.package.outputs.package-name }})" 
-          sleep 30  # Allow time for Kodi to process and log the add-on installation
+      # - name: Start Kodi
+      #   run: |
+      #     kodi --standalone --headless > kodi.log 2>&1 &
+      #     sleep 1  # Wait for Kodi to start
+
+      # - name: Install Add-on from ZIP
+      #   run: |
+      #     # No kodi-send; check log directly
+      #     kodi-send --action="InstallAddonFromZip($HOME/.kodi/addons/packages/${{ steps.package.outputs.package-name }})" 
+      #     sleep 30  # Allow time for Kodi to process and log the add-on installation
 
       # - name: Stop kodi
       #   run: |
       #     pkill -f kodi  # Terminate Kodi process
 
-      # Verify the add-on was installed and loaded successfully
-      - name: Check Kodi Log for Add-on Load Success
-        run: |
-          if grep -q "${{ env.ADDON_NAME }}" ~/.kodi/temp/kodi.log; then
-            echo "Add-on installed and loaded successfully"
-          else
-            echo "Add-on failed to load"
-            cat ~/.kodi/temp/kodi.log
-            exit 1
-          fi
+      # - name: Check Kodi Log for Add-on Load Success
+      #   run: |
+      #     if grep -q "${{ env.ADDON_NAME }}" ~/.kodi/temp/kodi.log; then
+      #       echo "Add-on installed and loaded successfully"
+      #     else
+      #       echo "Add-on failed to load"
+      #       cat ~/.kodi/temp/kodi.log
+      #       exit 1
+      #     fi
