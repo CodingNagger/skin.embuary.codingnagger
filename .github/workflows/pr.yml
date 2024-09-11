@@ -48,6 +48,8 @@ jobs:
           mkdir -p ~/.kodi/addons/packages
           cp ${{ steps.package.outputs.package-name }} ~/.kodi/addons/packages/
           echo "`pwd`/.kodi/addons/packages/${{ steps.package.outputs.package-name }}"
+          stat "`pwd`"
+          ls
           stat "`pwd`/.kodi/addons/packages/${{ steps.package.outputs.package-name }}"
 
       # Install the add-on from the ZIP file using Kodi's CLI
