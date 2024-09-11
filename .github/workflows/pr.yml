@@ -30,23 +30,22 @@ jobs:
           export DISPLAY=:99
           sleep 4
 
-      # Prepare the add-on directory structure
-      - name: Prepare Add-on Directory
-        run: |
-            mkdir -p ${ADDON_NAME}
-            ls | grep -v "${ADDON_NAME}" | xargs -I {} cp -r {} ${ADDON_NAME}/
-            cd ${ADDON_NAME}
-            rm -rf .git .github *.psd  # Exclude unnecessary files
+      - name: Generate version
+        id: version
+        uses: codacy/git-version@2.8.0
 
-      # Create ZIP file for the Kodi add-on
-      - name: Create ZIP package
-        run: |
-          zip -r ${{ env.ADDON_NAME }}.zip .
+      - name: Package add-on
+        id: package
+        uses: ./.github/actions/create-kodi-package
+        with:
+          name: ${{ env.ADDON_NAME }}
+          version:  ${{ steps.version.outputs.version }}
+
       # Create Kodi's user data directory and copy the ZIP file there
       - name: Copy ZIP file to Kodi's addons directory
         run: |
           mkdir -p ~/.kodi/addons/packages
-          cp ${{ env.ADDON_NAME }}.zip ~/.kodi/addons/packages/
+          cp ${{ steps.package.outputs.package-name }} ~/.kodi/addons/packages/
 
       # Install the add-on from the ZIP file using Kodi's CLI
       - name: Install Add-on from ZIP
