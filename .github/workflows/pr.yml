@@ -53,15 +53,19 @@ jobs:
           ls "$KODI_ADDON_ZIP_PATH"
           stat "$KODI_ADDON_ZIP_PATH/${{ steps.package.outputs.package-name }}"
 
-      # Install the add-on from the ZIP file using Kodi's CLI
-      - name: Install Add-on from ZIP
+      - name: Start Kodi
         run: |
-          KODI_ADDON_ZIP_PATH="$HOME/.kodi/addons/packages"
           kodi --standalone --test > kodi.log 2>&1 &
           sleep 10  # Wait for Kodi to start
+
+      - name: Install Add-on from ZIP
+        run: |
           # No kodi-send; check log directly
-          kodi-send --action="InstallAddonFromZip($KODI_ADDON_ZIP_PATH/${{ steps.package.outputs.package-name }})"
+          kodi-send --action="InstallAddonFromZip($HOME/.kodi/addons/packages/${{ steps.package.outputs.package-name }})" 
           sleep 30  # Allow time for Kodi to process and log the add-on installation
+
+      - name: Stop kodi
+        run: |
           pkill -f kodi  # Terminate Kodi process
 
       # Verify the add-on was installed and loaded successfully
