@@ -21,7 +21,7 @@ jobs:
         run: |
           sudo add-apt-repository -y ppa:team-xbmc/ppa
           sudo apt-get update
-          sudo apt-get install -y kodi xvfb
+          sudo apt-get install -y kodi xvfb kodi-eventclients-kodi-send
 
       - name: Start Xvfb (virtual framebuffer)
         run: |
@@ -54,7 +54,7 @@ jobs:
       - name: Start Kodi
         run: |
           kodi --standalone --headless > kodi.log 2>&1 &
-          sleep 15  # Wait for Kodi to start
+          sleep 1  # Wait for Kodi to start
 
       - name: Install Add-on from ZIP
         run: |
