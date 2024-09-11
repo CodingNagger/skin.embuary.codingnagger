@@ -21,7 +21,7 @@ jobs:
       - name: Install Kodi and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y kodi xvfb x11-utils zip
+          sudo apt-get install -y kodi kodi-eventclients-kodi-send xvfb x11-utils zip
 
       # Set up Xvfb for headless testing
       - name: Start Xvfb
@@ -54,7 +54,7 @@ jobs:
           kodi --standalone --test > kodi.log 2>&1 &
           sleep 10  # Wait for Kodi to start
           # No kodi-send; check log directly
-          tail -f ~/.kodi/temp/kodi.log &  # Keep the log output for inspection
+          kodi-send --action="InstallAddonFromZip(`pwd`/.kodi/addons/packages/${{ steps.package.outputs.package-name }})"
           sleep 30  # Allow time for Kodi to process and log the add-on installation
           pkill -f kodi  # Terminate Kodi process
 
