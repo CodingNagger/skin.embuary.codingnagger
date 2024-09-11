@@ -23,7 +23,7 @@ runs:
     - name: Prepare Add-on Directory
       shell: bash
       run: |
-        bash ${{ env.GITHUB_ACTION_PATH }}/prepare-directory.sh ${{ inputs.name }}
+        bash ${{ github.action_path }}/prepare-directory.sh ${{ inputs.name }}
 
     - name: Create ZIP package
       shell: bash
