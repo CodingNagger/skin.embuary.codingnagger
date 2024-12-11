@@ -41,7 +41,7 @@ jobs:
 
       # Upload the generated ZIP file as an artifact
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: addon-zip
           path: ${{ steps.package.outputs.package-name }}
