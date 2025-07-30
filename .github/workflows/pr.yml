@@ -20,6 +20,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y kodi xvfb kodi-eventclients-kodi-send
+          sudo apt-get install -y libgl1-mesa-dri libgl1-mesa-glx libpulse0 libavahi-client3
 
       - name: Start Xvfb (virtual framebuffer)
         run: |
@@ -56,7 +57,7 @@ jobs:
 
       - name: Start Kodi
         run: |
-          kodi --standalone --headless > kodi.log 2>&1 &
+          DISPLAY=:99 kodi --standalone --headless > kodi.log 2>&1 &
           sleep 1  # Wait for Kodi to start
 
       - name: Install Add-on from ZIP
