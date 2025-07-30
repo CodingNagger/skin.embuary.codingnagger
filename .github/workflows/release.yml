@@ -16,7 +16,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Install required tools (e.g., zip)
       - name: Install zip
@@ -31,7 +31,7 @@ jobs:
         uses: ./.github/actions/create-kodi-package
         with:
           name: ${{ env.ADDON_NAME }}
-          version:  ${{ steps.version.outputs.version }}
+          version: ${{ steps.version.outputs.version }}
 
       # Create Kodi's user data directory and copy the ZIP file there
       - name: Copy ZIP file to Kodi's addons directory
@@ -41,7 +41,7 @@ jobs:
 
       # Upload the generated ZIP file as an artifact
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: addon-zip
           path: ${{ steps.package.outputs.package-name }}
