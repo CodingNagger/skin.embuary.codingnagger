@@ -68,6 +68,7 @@ jobs:
       - name: Show processes
         run: |
           ps
+          ps aux | grep Xvfb
 
       - name: Stop kodi
         run: |
