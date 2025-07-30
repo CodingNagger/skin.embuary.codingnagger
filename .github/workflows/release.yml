@@ -17,6 +17,9 @@ jobs:
       # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: '10'
 
       # Install required tools (e.g., zip)
       - name: Install zip
