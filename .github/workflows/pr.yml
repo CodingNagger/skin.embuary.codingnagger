@@ -19,7 +19,7 @@ jobs:
       - name: Install Kodi and Xvfb
         run: |
           sudo apt-get update
-          sudo apt-get install -y xvfb libpulse0 libavahi-client3
+          sudo apt-get install -y kodi xvfb kodi-eventclients-kodi-send libpulse0 libavahi-client3
 
       - name: Start Xvfb (virtual framebuffer)
         run: |
