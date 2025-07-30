@@ -65,6 +65,10 @@ jobs:
           kodi-send --action="InstallAddonFromZip($HOME/.kodi/addons/packages/${{ steps.package.outputs.package-name }})" 
           sleep 30  # Allow time for Kodi to process and log the add-on installation
 
+      - name: Show processes
+        run: |
+          ps
+
       - name: Stop kodi
         run: |
           pkill -f kodi  # Terminate Kodi process
