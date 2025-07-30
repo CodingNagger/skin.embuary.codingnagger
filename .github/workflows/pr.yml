@@ -13,19 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # - name: Checkout repository
-      #   uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # - name: Install Kodi and Xvfb
-      #   run: |
-      #     sudo add-apt-repository -y ppa:team-xbmc/ppa
-      #     sudo apt-get update
-      #     sudo apt-get install -y kodi xvfb kodi-eventclients-kodi-send
+      - name: Install Kodi and Xvfb
+        run: |
+          sudo add-apt-repository -y ppa:team-xbmc/ppa
+          sudo apt-get update
+          sudo apt-get install -y kodi xvfb kodi-eventclients-kodi-send
 
-      # - name: Start Xvfb (virtual framebuffer)
-      #   run: |
-      #     Xvfb :99 -screen 0 1920x1080x24 &
-      #     export DISPLAY=:99
+      - name: Start Xvfb (virtual framebuffer)
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+          export DISPLAY=:99
 
       - name: Generate version
         id: version
@@ -37,7 +37,7 @@ jobs:
         uses: ./.github/actions/create-kodi-package
         with:
           name: ${{ env.ADDON_NAME }}
-          version:  ${{ steps.version.outputs.version }}
+          version: ${{ steps.version.outputs.version }}
 
       # # Create Kodi's user data directory and copy the ZIP file there
       # - name: Copy ZIP file to Kodi's addons directory
